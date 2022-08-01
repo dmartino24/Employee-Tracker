@@ -1,3 +1,4 @@
+// required fields
 const inquirer = require("inquirer");
 const cTable = require("console.table");
 const mysql = require("mysql2");
@@ -6,19 +7,20 @@ const { validateString } = require("./utils/validator");
 
 require("dotenv").config();
 
+// connection credentials to the db
 const db = mysql.createConnection({
   host: process.env.DB_NAME,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: "employee_db",
 });
-
+// connect to the database
 db.connect((err) => {
   if (err) throw err;
   console.log("Database connected");
   startApp();
 });
-
+// starting point for the app 
 startApp = () => {
   console.log("*------------------*");
   console.log("|                  |");
@@ -27,6 +29,7 @@ startApp = () => {
   console.log("*------------------*");
   startPrompt();
 };
+// prompts the user to choose what they want to do with the database
 const startPrompt = () => {
   inquirer
     .prompt([
@@ -75,6 +78,7 @@ const startPrompt = () => {
       }
     });
 };
+// updates the chosen employee role
 const updateEmployeeRole = () => {
   db.query("SELECT * FROM employee", (err, employeeData) => {
     if (err) {
@@ -138,6 +142,7 @@ const updateEmployeeRole = () => {
     });
   });
 };
+// adds employee to the db
 const addEmployee = () => {
   let roleArray = getEmployeeRoles();
   let managerArray = getEmployeeManagers();
@@ -187,7 +192,7 @@ const addEmployee = () => {
       });
     });
 };
-
+// gets every role in the database
 const getEmployeeRoles = () => {
   const sql = "SELECT * FROM role";
   const roleArray = [];
@@ -202,6 +207,7 @@ const getEmployeeRoles = () => {
   });
   return roleArray;
 };
+// gets the first name and last name of managers
 const getEmployeeManagers = () => {
   const sql =
     "SELECT first_name, last_name FROM employee WHERE manager_id IS NULL";
@@ -216,6 +222,7 @@ const getEmployeeManagers = () => {
   });
   return managerArray;
 };
+// view all the roles in the database
 const viewAllRoles = () => {
   const sql = "SELECT * from role";
 
@@ -229,6 +236,7 @@ const viewAllRoles = () => {
     startPrompt();
   });
 };
+// adds a role to the database
 const addRole = () => {
   db.query("SELECT * FROM department", (err, res) => {
     if (err) {
@@ -282,6 +290,7 @@ const addRole = () => {
       });
   });
 };
+// view all of the departments in the database
 const viewAllDepartments = () => {
   const sql = "SELECT * from department";
 
@@ -316,6 +325,7 @@ const addDepartment = () => {
       });
     });
 };
+// views all the employees in the database
 const viewAllEmployees = () => {
   const sql = `SELECT employee.id, 
   employee.first_name, 

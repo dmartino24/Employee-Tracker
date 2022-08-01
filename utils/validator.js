@@ -1,5 +1,5 @@
 const validator = require("validator");
-
+// validates input from the user
 const validate = {
   validateString(str) {
     return str !== "" || "Please enter a valid response.";
